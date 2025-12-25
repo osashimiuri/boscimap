@@ -1,0 +1,770 @@
+/* --- ★カラーパレット定義（ここを変えれば全体が変わる！） --- */
+:root {
+  --main-color: #EE8972;   /* コーラルオレンジ（温かさ・人とのつながり） */
+  --sub-color: #6BAA9F;    /* セージグリーン（安心・安全） */
+  --accent-color: #F2C94C; /* ダンデライオン（希望・アクセント） */
+  --base-color: #F9F8F4;   /* アイボリー（背景・優しさ） */
+  --text-color: #4A4A4A;   /* ウォームグレー（文字・信頼） */
+  --border-color: #E0E0E0; /* 薄いグレー（境界線） */
+  
+  /* フォント設定 */
+  --font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif;
+}
+
+/* ページ全体の余白をなくす */
+body {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--base-color);
+  color: var(--text-color);
+  font-family: var(--font-family);
+}
+
+/* htmlとbodyを画面全体に広げる */
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
+/* --- ヘッダー（全体の上部） --- */
+#global-header {
+  height: 50px;
+  background-color: #ffffff;
+  border-bottom: 3px solid var(--main-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  z-index: 100;
+  flex-shrink: 0;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-logo-icon {
+  width: 40px; height: 40px;
+  background: var(--main-color);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5em;
+  color: white;
+  box-shadow: 0 2px 5px rgba(238, 137, 114, 0.4);
+}
+
+.header-titles {
+  display: flex;
+  flex-direction: column;
+}
+
+.header-main-title {
+  margin: 0;
+  font-size: 1.3em;
+  font-weight: bold;
+  color: var(--text-color);
+  letter-spacing: 1px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 0.9em;
+  font-weight: bold;
+}
+
+.status-item {
+  background: var(--base-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.85em;
+}
+
+/* --- メインコンテナ（サイドバー＋地図） --- */
+.main-container {
+  display: flex;
+  flex: 1; /* ヘッダー以外の残りの高さを全部使う */
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* --- サイドバー（左側） --- */
+#sidebar {
+  width: 380px; /* 少し幅広にして余裕を持たせる */
+  height: 100%;
+  background-color: #fff;
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  z-index: 20;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+}
+
+.work-list-title {
+  margin: 0 0 5px 0;
+  font-size: 1.2em;
+  color: var(--main-color);
+  font-weight: bold;
+  /* 横並びにするための設定 */
+  display: flex;
+  align-items: baseline; /* 文字の下ラインを揃える */
+  justify-content: center;
+  gap: 10px; /* タイトルと注釈の間隔 */
+}
+
+.header-hint {
+  font-size: 0.6em; /* 本体よりだいぶ小さく */
+  color: #999;      /* 薄いグレーで目立たせない */
+  font-weight: normal;
+}
+
+.work-list-guide {
+  margin: 0;
+  font-size: 0.9em;
+  color: #999;
+}
+
+/* 2. フィルターエリア */
+#sidebar-filter {
+  padding: 10px 25px 0px 25px; /* 上下の余白を少し減らす */
+  background-color: #fff;
+  border-bottom: 1px solid var(--border-color);
+  z-index: 25;
+}
+
+/* 「🔍 フィルター」の見出し */
+.filter-main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9em;
+  font-weight: bold;
+  color: var(--text-color);
+  margin-bottom: 5px;
+  cursor: pointer;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #eee;
+}
+
+.toggle-icon {
+  color: #ccc;
+  font-size: 0.8em;
+  transition: transform 0.3s ease; /* 回るアニメーション */
+}
+
+.toggle-icon.closed {
+  transform: rotate(-90deg);
+}
+
+.filter-group {
+  margin-bottom: 15px; /* グループ間の余白を広めに */
+}
+
+/* 各グループのラベル（左揃え） */
+.filter-label {
+  font-size: 0.9em;
+  color: #8C6A60; /* 少し茶色がかったグレーでおしゃれに */
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: left; /* 左揃え */
+}
+
+/* ボタンを並べるエリア（左揃え） */
+.filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px; /* ★間隔を狭く（元は 10px） */
+  justify-content: flex-start;
+}
+
+/* --- チップ（ボタン）のデザイン --- */
+.chip {
+  display: inline-flex; 
+  align-items: center;
+  justify-content: center;
+  /* ★修正：サイズを小さくして1行に入るように */
+  padding: 6px 10px;    /* 余白を減らす（元は 8px 18px） */
+  font-size: 0.8em;     /* 文字を小さく（元は 0.9em） */
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: bold;
+  background-color: #fff;
+  border: 1px solid var(--border-color);
+  color: #666;
+  white-space: nowrap; /* 文字が折り返されないようにする */
+}
+
+/* ホバー時 */
+.chip:hover {
+  background-color: var(--base-color);
+  border-color: var(--main-color);
+  color: var(--main-color);
+}
+
+/* 選択中の状態 */
+.chip.active {
+  background-color: var(--main-color);
+  border-color: var(--main-color);
+  color: white;
+  box-shadow: 0 2px 5px rgba(238, 137, 114, 0.3);
+}
+
+/* 行動フェーズのアクティブ色（サブカラー） */
+.chip.phase-chip.active {
+  background-color: var(--sub-color);
+  border-color: var(--sub-color);
+}
+
+/* --- お気に入りボタン（2列レイアウト） --- */
+.fav-buttons-row {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.fav-filter-btn {
+  flex: 1; /* 均等に広がる */
+  padding: 5px 10px;
+  border-radius: 50px; /* 丸く */
+  border: 1px solid var(--border-color);
+  background: #fff;
+  color: #666;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.fav-filter-btn:hover {
+  background-color: var(--base-color);
+}
+
+/* お気に入りONの状態（共通） */
+.fav-filter-btn.active {
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* ハート独自のON色 */
+#filter-heart-btn.active {
+  border: 2px solid #ff69b4;
+  color: #ff69b4;
+  background-color: #fff0f5;
+}
+/* アクション独自のON色 */
+#filter-action-btn.active {
+  border: 2px solid #fbc02d;
+  color: #fbc02d;
+  background-color: #fffff0;
+}
+
+/* --- 隠しメニュー（水害などの詳細） --- */
+.hazard-sub-options {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: var(--base-color);
+  border-radius: 12px;
+  border: 1px solid #eee;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.sub-option-header {
+  font-size: 0.85em;
+  font-weight: bold;
+  color: var(--text-color);
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 5px;
+}
+
+.hazard-sub-options label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  color: #555;
+  font-size: 0.9em;
+  cursor: pointer;
+}
+.hazard-sub-options input[type="checkbox"] {
+  margin-right: 8px;
+  transform: scale(1.1);
+  accent-color: var(--sub-color); /* チェックの色を緑に */
+}
+
+/* --- 作品リストエリア --- */
+#art-list-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 5px 20px;
+  background-color: #fff;
+  scroll-behavior: smooth;
+}
+
+/* 作品カード */
+.art-card {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: 12px; /* カードも少し丸く */
+  padding: 12px 12px 0 12px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.art-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.art-card.active-card {
+  border: 3px solid var(--main-color);
+  background-color: #FFF0ED; /* 極薄いコーラル */
+}
+
+.art-card-img {
+  width: 100%;
+  height: auto;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  background-color: #eee;
+}
+
+.art-card-info {
+  flex: 1;
+  padding-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.art-title {
+  font-weight: bold;
+  font-size: 0.8em;
+  color: var(--text-color);
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* --- 地図エリア --- */
+#map-area {
+  flex: 1;
+  position: relative;
+  height: 100%;
+}
+
+#viewDiv {
+  height: 100%;
+  width: 100%;
+}
+
+/* --- 地図上のUIパーツ --- */
+
+/* 再検索ボタン */
+.search-area-btn {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  background-color: var(--sub-color); /* 緑色 */
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 30px;
+  font-weight: bold;
+  box-shadow: 0 4px 10px rgba(107, 170, 159, 0.4);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.search-area-btn:hover {
+  background-color: #5A968C;
+  transform: translateX(-50%) translateY(-2px);
+}
+
+/* メッセージチップ（上部中央） */
+#top-message {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  pointer-events: none;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.message-header {
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 10px 24px;
+  border-radius: 50px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  pointer-events: auto;
+  display: inline-block;
+  border: 1px solid var(--border-color);
+}
+.message-text {
+  font-size: 0.95em;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+/* 防災情報ボタン（右上） */
+#menu-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: white;
+  border: 1px solid var(--sub-color);
+  border-radius: 8px;
+  padding: 8px 16px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  cursor: pointer;
+  z-index: 10;
+  font-weight: bold;
+  color: var(--sub-color);
+  transition: all 0.2s;
+}
+#menu-btn:hover {
+  background-color: var(--sub-color);
+  color: white;
+}
+
+/* 左下の地図操作ボタン群 */
+#bottom-left-controls {
+  position: absolute;
+  bottom: 30px;
+  left: 20px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.basemap-buttons-container {
+  background-color: white;
+  padding: 4px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  display: flex;
+  gap: 5px;
+  width: fit-content;
+}
+
+.basemap-btn {
+  padding: 6px 14px;
+  font-size: 0.85em;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #666;
+  font-weight: bold;
+}
+.basemap-btn.active {
+  background-color: var(--sub-color);
+  color: white;
+}
+
+/* --- 右パネル（コントロールパネル） --- */
+#control-panel {
+  position: absolute; top: 70px; right: 20px;
+  background: white; border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+  z-index: 30; width: 380px; max-height: calc(100vh - 100px);
+  display: flex; flex-direction: column;
+  border: 1px solid var(--border-color);
+}
+
+.tab-buttons { display: flex; margin-bottom: 10px; padding: 10px; border-bottom: 1px solid #eee; }
+.tab-button { flex: 1; padding: 10px; border: none; background: transparent; cursor: pointer; color: #888; border-bottom: 2px solid transparent; font-weight: bold;}
+.tab-button.active { color: var(--sub-color); border-bottom-color: var(--sub-color); }
+.tab-content { padding: 15px; overflow-y: auto; }
+
+/* 凡例やリストの調整 */
+.filter-option { margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 0.9em; }
+.reorder-button { padding: 2px 8px; cursor: pointer; background: #eee; border:none; border-radius:4px; }
+.guide { font-size: 0.8em; color: #888; text-align:center; margin-bottom: 12px; }
+
+/* ArcGIS ポップアップの調整 */
+.esri-popup__main-container { max-height: none !important; border-radius: 12px; }
+.popup-image-vertical { width: 100%; height: auto; border-radius: 8px; margin-bottom:10px; }
+.popup-author { font-size: 1.1em; color: var(--main-color); margin-bottom: 5px; }
+.popup-link { display: block; background: var(--main-color); color: white; text-align: center; padding: 8px; border-radius: 20px; text-decoration: none; margin-top: 10px; font-weight: bold;}
+.popup-link:hover { opacity: 0.9; }
+
+
+/* --- ★新機能：ハザードマップ重ねるボタン --- */
+.hazard-overlay-btn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px;
+  background: #fff;
+  border: 1px solid #ff9800; /* オレンジ枠 */
+  color: #d35400;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  transition: all 0.2s;
+}
+
+.hazard-overlay-btn:hover {
+  background: #fff8e1; /* 薄いオレンジ背景 */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* --- 右パネルのグループデザイン --- */
+.hazard-group {
+  margin-bottom: 15px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease; /* 光る時のアニメーション用 */
+}
+
+.hazard-group-header {
+  background: #f9f9f9;
+  padding: 10px 15px;
+  font-weight: bold;
+  color: #555;
+  border-bottom: 1px solid #eee;
+}
+
+.hazard-group-content {
+  padding: 10px 15px;
+  background: #fff;
+}
+
+/* --- ★注目！ハイライト時のスタイル --- */
+.hazard-group.highlight {
+  border: 2px solid #ff9800;   /* 枠をオレンジに */
+  box-shadow: 0 0 15px rgba(255, 152, 0, 0.3); /* フワッと光らせる */
+  background-color: #fffbf0;   /* 背景も少し明るく */
+}
+
+/* 閉じるボタン（前回の復習） */
+.close-btn {
+  position: absolute; top: 5px; right: 5px; width: 30px; height: 30px;
+  background: transparent; border: none; font-size: 1.8em; color: #999;
+  cursor: pointer; z-index: 100; display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; line-height: 1;
+}
+
+/* 左サイドバーのチップ内のシンボル */
+.chip .symbol-preview {
+  width: 18px; 
+  height: 18px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+/* 右パネルの見出し内のシンボル */
+.hazard-group-header .symbol-preview {
+  width: 24px;       /* 少し大きめに */
+  height: 24px;
+  margin-right: 10px;
+  vertical-align: middle;
+  display: inline-block;
+}
+
+/* 見出しの文字位置調整 */
+.hazard-group-header {
+  display: flex;
+  align-items: center; /* 縦方向中央揃え */
+  font-size: 1.1em;
+}
+
+/* --- チュートリアル（スライドモーダル） --- */
+.tutorial-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* 背景を少し暗く */
+  backdrop-filter: blur(4px); /* 背景をぼかす */
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.tutorial-card {
+  width: 90%;
+  max-width: 450px;
+  background: white;
+  border-radius: 20px;
+  padding: 25px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  position: relative;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 画像エリア */
+.tutorial-image-container {
+  width: 100%;
+  height: 220px; /* 高さを固定 */
+  background-color: #F9F8F4;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  margin-top: 15px;
+  overflow: hidden;
+  border: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tutorial-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* 画像全体が見えるように */
+}
+
+/* ドットインジケーター */
+.tutorial-dots {
+  display: flex;
+  gap: 8px;
+  /* 以前の margin-bottom は無視して、強制的に中央配置 */
+  position: absolute; 
+  left: 50%;
+  transform: translateX(-50%); /* ど真ん中に持ってくる */
+  margin: 0;
+}
+/* ドット自体のデザイン（HTMLに合わせて .dot に修正） */
+.tutorial-dots .dot {
+  width: 8px; height: 8px;
+  background-color: #ddd;
+  border-radius: 50%;
+  transition: all 0.3s;
+}
+
+/* アクティブなドット */
+.tutorial-dots .dot.active {
+  background-color: var(--main-color);
+  width: 20px;
+  border-radius: 10px;
+}
+
+/* テキストエリア */
+.tutorial-content {
+  margin-bottom: 25px;
+  width: 100%;
+}
+#tutorial-title {
+  font-size: 1.3em;
+  color: var(--text-color);
+  margin: 0 0 10px 0;
+  font-weight: bold;
+}
+#tutorial-desc {
+  font-size: 0.95em;
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0 10px;
+}
+
+/* フッター（ボタンとページ番号） */
+.tutorial-footer {
+  display: flex;
+  justify-content: space-between; /* ボタンを端へ */
+  align-items: center;
+  width: 100%;
+  margin-top: auto;
+  position: relative; /* ここが重要！ */
+  padding-top: 20px;  /* 少し余白を開ける */
+}
+
+.tutorial-counter {
+  font-size: 0.9em;
+  color: #999;
+  font-weight: bold;
+}
+
+.tutorial-nav-btn {
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  font-size: 0.9em;
+  transition: all 0.2s;
+  min-width: 80px;
+}
+
+/* 次へボタン（メインカラー） */
+.tutorial-nav-btn.primary {
+  background-color: var(--main-color);
+  color: white;
+  box-shadow: 0 4px 10px rgba(238, 137, 114, 0.4);
+}
+.tutorial-nav-btn.primary:hover {
+  transform: translateY(-2px);
+  background-color: #E67A60;
+}
+
+/* 戻るボタン（控えめに） */
+.tutorial-nav-btn.secondary {
+  background-color: transparent;
+  color: #999;
+  border: 1px solid #ddd;
+}
+.tutorial-nav-btn.secondary:hover {
+  background-color: #f9f9f9;
+  color: #666;
+}
+
+/* --- ヘッダーの「？」ボタン（チュートリアル） --- */
+#header-help-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%; /* まんまるにする */
+  background-color: var(--accent-color); /* アクセントカラー（黄色） */
+  color: #5d4037; /* 文字は少し濃い茶色で見やすく */
+  border: 2px solid #fff; /* 白いフチをつけてポップに */
+  font-weight: bold;
+  font-size: 1.2em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 10px rgba(242, 201, 76, 0.4); /* ふんわりした影 */
+  transition: all 0.2s ease; /* 動きをなめらかに */
+}
+
+/* --- ★追加：トグル機能のクラス制御 --- */
+.filter-content.closed {
+  display: none; /* .closed クラスがついている時は非表示にする */
+}
