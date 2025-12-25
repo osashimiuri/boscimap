@@ -465,7 +465,7 @@ document.addEventListener("DOMContentLoaded", function() {
             item2.classList.remove("locked");
             item2.classList.add("active"); // 次のステップをアクティブに
             btn2.disabled = false;
-            btn2.innerText = "挑戦する ＞";
+            btn2.innerText = "コラージュを鑑賞する ＞";
         }
 
       } else if (stepNum === 2) {
