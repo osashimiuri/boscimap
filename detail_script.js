@@ -160,32 +160,32 @@ document.addEventListener("DOMContentLoaded", function() {
     };
 
     const allResourcesDef = {
-        "避難": { 
-            title: "避難所と緊急輸送路（逃げる場所と道）", 
-            layerTitles: ["TIIKIBOSAIKYOTEN", "douro12", "yusouro"], // 全部入りセット！
-            icon: "🏃" 
-        },
+        "避難": [
+            { title: "地域防災拠点（避難所）", layerTitles: ["TIIKIBOSAIKYOTEN"], icon: "🏠" },
+            { title: "広い道路・緊急輸送路", layerTitles: ["douro12", "yusouro"], icon: "🛣️" }
+        ],
 
-        川: { title: "河川", layerTitles: ["suibu"], icon: "" },
-        "拠点": { title: "地域防災拠点（避難所）", layerTitles: ["TIIKIBOSAIKYOTEN"], icon: "" },
-        "学校": { title: "地域防災拠点（避難所）", layerTitles: ["TIIKIBOSAIKYOTEN"], icon: "" },
+        // ▼ 他のものも、書き方を統一してリスト（[...]）に入れています
+        "川": [ { title: "河川", layerTitles: ["suibu"], icon: "🌊" } ],
         
-        "公園": { title: "公園", layerTitles: ["koen-point"], icon: "" },
-        "広場": { title: "公園", layerTitles: ["koen-point"], icon: "" },
+        "拠点": [ { title: "地域防災拠点（避難所）", layerTitles: ["TIIKIBOSAIKYOTEN"], icon: "🏠" } ],
+        "学校": [ { title: "地域防災拠点（避難所）", layerTitles: ["TIIKIBOSAIKYOTEN"], icon: "🏫" } ],
         
-        "トイレ": { title: "災害用・公衆トイレ", layerTitles: ["toilet", "hamakkotoilet"], icon: "" },
-        "便所": { title: "災害用・公衆トイレ", layerTitles: ["toilet", "hamakkotoilet"], icon: "" },
+        "公園": [ { title: "公園", layerTitles: ["koen-point"], icon: "🌳" } ],
+        "広場": [ { title: "公園", layerTitles: ["koen-point"], icon: "🌳" } ],
         
-        "水": { title: "給水スポット（給水栓・タンク）", layerTitles: ["kinkyu_kyusuisen", "taishin_kyusuisen", "kyusuitank", "haisuisou"], icon: "" },
-        "給水": { title: "給水スポット（給水栓・タンク）", layerTitles: ["kinkyu_kyusuisen", "taishin_kyusuisen", "kyusuitank", "haisuisou"], icon: "" },
+        "トイレ": [ { title: "災害用・公衆トイレ", layerTitles: ["toilet", "hamakkotoilet"], icon: "🚻" } ],
+        "便所": [ { title: "災害用・公衆トイレ", layerTitles: ["toilet", "hamakkotoilet"], icon: "🚻" } ],
         
-        "道路": { title: "広い道路・緊急輸送路", layerTitles: ["douro12", "yusouro"], icon: "" },
-        "動": { title: "広い道路・緊急輸送路", layerTitles: ["douro12", "yusouro"], icon: "" },
-        "逃": { title: "広い道路・緊急輸送路", layerTitles: ["douro12", "yusouro"], icon: "" },
-        "避難": { title: "広い道路・緊急輸送路", layerTitles: ["douro12", "yusouro"], icon: "" },
+        "水": [ { title: "給水スポット（給水栓・タンク）", layerTitles: ["kinkyu_kyusuisen", "taishin_kyusuisen", "kyusuitank", "haisuisou"], icon: "💧" } ],
+        "給水": [ { title: "給水スポット（給水栓・タンク）", layerTitles: ["kinkyu_kyusuisen", "taishin_kyusuisen", "kyusuitank", "haisuisou"], icon: "💧" } ],
+        
+        "道路": [ { title: "広い道路・緊急輸送路", layerTitles: ["douro12", "yusouro"], icon: "🛣️" } ],
+        "動":   [ { title: "広い道路・緊急輸送路", layerTitles: ["douro12", "yusouro"], icon: "🛣️" } ],
+        "逃":   [ { title: "広い道路・緊急輸送路", layerTitles: ["douro12", "yusouro"], icon: "🛣️" } ],
 
-        "消防": { title: "消防団器具置き場", layerTitles: ["syouboukigu"], icon: "" },
-        "火": { title: "消防団器具置き場", layerTitles: ["syouboukigu"], icon: "" }
+        "消防": [ { title: "消防団器具置き場", layerTitles: ["syouboukigu"], icon: "🚒" } ],
+        "火":   [ { title: "消防団器具置き場", layerTitles: ["syouboukigu"], icon: "🚒" } ]
     };
   
     // --- データの読み込み ---
@@ -325,46 +325,54 @@ document.addEventListener("DOMContentLoaded", function() {
         // コラージュの解説文（防災行動テキスト）を取得
         const actionText = featureAttributes.collage || ""; 
         
-        // ヒットした資源を記録するセット（重複排除のため）
-        const matchedResources = new Set();
-        // マッチした定義キーを保存
-        const addedKeys = new Set();
+        // ★重複防止用のメモ帳（すでに作ったタイトルのリスト）
+        const createdTitles = new Set();
+        let hitCount = 0;
 
         Object.keys(allResourcesDef).forEach(keyword => {
+            // テキストの中にキーワード（例：「避難」）が含まれていたら...
             if (actionText.includes(keyword)) {
-                const def = allResourcesDef[keyword];
                 
-                // 同じラベル（例：「水」と「給水」で同じ定義）が既に出ていればスキップ
-                if (matchedResources.has(def.title)) return;
-                
-                matchedResources.add(def.title);
-                addedKeys.add(keyword);
+                // そのキーワードに紐づく設定リストを全部チェック！
+                const definitions = allResourcesDef[keyword];
 
-                const div = document.createElement("div");
-                div.className = "hazard-check-item"; // デザインはSTEP1と同じものを流用
-                const checkId = `chk-resource-${keyword}`;
-                
-                div.innerHTML = `
-                    <input type="checkbox" id="${checkId}">
-                    <label for="${checkId}">${def.icon} ${def.title}</label>
-                `;
-                
-                container.appendChild(div);
+                definitions.forEach(def => {
+                    // ★チェック：このタイトル、もう作ったっけ？
+                    if (createdTitles.has(def.title)) {
+                        return; // もう作ってあるから何もしない（スキップ！）
+                    }
 
-                const checkbox = div.querySelector("input");
-                checkbox.addEventListener("change", () => {
-                    const isChecked = checkbox.checked;
-                    // 定義されているレイヤータイトルを配列で回してON/OFF
-                    def.layerTitles.forEach(title => {
-                        const layer = webmap.allLayers.find(l => l.title === title);
-                        if (layer) layer.visible = isChecked;
+                    // まだ作ってないなら、メモ帳に記録して作成開始
+                    createdTitles.add(def.title);
+                    hitCount++;
+
+                    const div = document.createElement("div");
+                    div.className = "hazard-check-item"; 
+                    // IDをユニークにするために少し工夫
+                    const checkId = `chk-resource-${hitCount}`;
+                    
+                    div.innerHTML = `
+                        <input type="checkbox" id="${checkId}">
+                        <label for="${checkId}">${def.icon} ${def.title}</label>
+                    `;
+                    
+                    container.appendChild(div);
+
+                    const checkbox = div.querySelector("input");
+                    checkbox.addEventListener("change", () => {
+                        const isChecked = checkbox.checked;
+                        // 定義されているレイヤーを全部ON/OFF
+                        def.layerTitles.forEach(title => {
+                            const layer = webmap.allLayers.find(l => l.title === title);
+                            if (layer) layer.visible = isChecked;
+                        });
                     });
                 });
             }
         });
 
-        // 何もヒットしなかった場合のデフォルト表示（例：避難所だけ出す、またはメッセージ）
-        if (matchedResources.size === 0) {
+        // 何もヒットしなかった場合のメッセージ
+        if (hitCount === 0) {
             container.innerHTML = "<p style='font-size:0.8em; color:#999; width:100%; text-align:center;'>※ 地図上に表示できる特定の防災資源キーワードはありません。<br>（右上のメニューから自由に地図を操作できます）</p>";
         }
     }
