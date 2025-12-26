@@ -747,13 +747,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
             let count = 1;
             if(riskFeatures.length > 0) {
-                riskFeatures.forEach(f => createCompactCard(gridRisk, f, "同じリスク", "#EE8972", count++, "badge-risk"));
+                riskFeatures.forEach(f => createCompactCard(gridRisk, f, "同じ災害リスクを扱った作品", "#EE8972", count++, "badge-risk"));
             } else {
                 gridRisk.innerHTML = "<p style='font-size:0.8em; color:#999; padding:5px;'>該当なし</p>";
             }
 
             if(timeFeatures.length > 0) {
-                timeFeatures.forEach(f => createCompactCard(gridTime, f, "同じ時間", "#6BAA9F", count++, "badge-time"));
+                timeFeatures.forEach(f => createCompactCard(gridTime, f, "同じタイミングの防災行動を扱った作品", "#6BAA9F", count++, "badge-time"));
             } else {
                 gridTime.innerHTML = "<p style='font-size:0.8em; color:#999; padding:5px;'>該当なし</p>";
             }
